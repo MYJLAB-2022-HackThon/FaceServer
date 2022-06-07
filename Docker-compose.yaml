@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  faceserver:
+    ports:
+      - 80:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: faceserver
+    volumes:
+      - ./app:/app
