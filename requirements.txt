@@ -1,5 +1,7 @@
-numpy
+numpy==1.20
 Pillow
 python-multipart
 torch
 torchvision
+opencv-python==4.5.5.64
+opencv-contrib-python==4.5.5.64
