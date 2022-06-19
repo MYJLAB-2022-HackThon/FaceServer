@@ -1,8 +1,8 @@
-version: "3.9"
+version: "3.3"
 services:
   faceserver:
     ports:
-      - 55580:55580
+      - 0.0.0.0:55580:80
     build:
       context: .
       dockerfile: Dockerfile
