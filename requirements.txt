@@ -5,3 +5,4 @@ torch
 torchvision
 opencv-python==4.5.5.64
 opencv-contrib-python==4.5.5.64
+dlib==19.18.0

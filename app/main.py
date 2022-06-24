@@ -1,57 +1,16 @@
-import base64
-from urllib import response
-import cv2
+from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Cookie, Response
 from fastapi.responses import JSONResponse
-import os
 import string
 import secrets
 from typing import Optional
-import numpy as np
-from PIL import Image
-from io import BytesIO
+import uuid
 import uvicorn
 
+from face_model.face_model import model
+from image_operate.image_operate import img_tool_box
+
 app = FastAPI()
-
-UPLOAD_DIR = "/app/img/"
-
-animal_dict = {
-    "Dog": 0.21,
-    "Cat": 0.01,
-    "Wolf": 0.32,
-    "Gorilla": 0.11,
-    "Fox": 0.09,
-    "Rabbit": 0.01,
-    "Monkey": 0.24,
-    "Horse": 0.01,
-}
-
-
-def transform_cv2(contents):
-    base_contents = base64.b64encode(contents)
-    im_bytes = base64.b64decode(base_contents)
-    nparr = np.frombuffer(im_bytes, dtype=np.uint8)
-    img = cv2.imdecode(nparr, flags=cv2.IMREAD_COLOR)
-    return img
-
-
-def save_image_file(file_name, cv2_contents):
-    cv2.imwrite(os.path.join(UPLOAD_DIR + file_name), cv2_contents)
-
-
-def load_image_file(file_name):
-    return cv2.imread(os.path.join(UPLOAD_DIR + file_name), cv2.IMREAD_GRAYSCALE)
-
-
-def transform_funny_image(img, animal):
-    return img
-
-
-def transform_str(cv2_img):
-    _, img_arr = cv2.imencode(".png", cv2_img)
-    img_enc = img_arr.tostring()
-    return img_enc
 
 
 def pass_gen(size=12):
@@ -60,16 +19,55 @@ def pass_gen(size=12):
     return "".join(secrets.choice(chars) for _ in range(size))
 
 
+def name_gen():
+    str_dt_now = time_gen()
+    name = str(uuid.uuid4())[:9] + str_dt_now + ".png"
+    return name
+
+
+def time_gen():
+    dt_now = datetime.now()
+    str_dt_now = dt_now.strftime("%Y-%m-%d%H:%M:%S")
+    return str_dt_now
+
+
+def animal_dict_gen(animal_list):
+    iteral = 0
+    animal_dict = {
+        "Dog": 0,
+        "Cat": 0,
+        "Wolf": 0,
+        "Gorilla": 0,
+        "Fox": 0,
+        "Rabbit": 0,
+        "Monkey": 0,
+        "Horse": 0,
+    }
+    for key in animal_dict:
+        animal_dict[key] += animal_list[iteral]
+        iteral += 1
+    return animal_dict
+
+
 @app.post("/classify")
 async def return_classify_list(response: Response, file: UploadFile = File(...)):
     try:
         contents = await file.read()
-        cv2_contents = transform_cv2(contents)
 
-        file_name = "test.png"  # いずれ乱数にする
-        save_image_file(file_name, cv2_contents)
+        file_name = name_gen()
         cookie_pass = pass_gen()
-        json_body = {"message": "Completed save img", "animalList": animal_dict}
+
+        cv2_image = img_tool_box.contents_to_cv2(contents)
+        face_image = img_tool_box.cutout_face(cv2_image)
+        pil_face_image = img_tool_box.pil_to_cv2(face_image)
+
+        predicted_animal_list = model.input_image_to_model(pil_face_image)
+        predicted_animal_dict = animal_dict_gen(predicted_animal_list)
+
+        json_body = {
+            "message": "Completed save img",
+            "animalList": predicted_animal_dict,
+        }
         response = JSONResponse(content=json_body)
         response.set_cookie(key="file_name", value=file_name)
         response.set_cookie(key="pass", value=cookie_pass)
@@ -78,6 +76,7 @@ async def return_classify_list(response: Response, file: UploadFile = File(...))
         print(e)
         return {"message": f"There was an error {e}"}
     finally:
+        await img_tool_box.save_image_file(file_name, cv2_image)
         await file.close()
 
 
@@ -86,10 +85,11 @@ async def return_edited_img(
     animal: str, response: Response, file_name: Optional[str] = Cookie(None)
 ):
     try:
-        img = load_image_file(file_name)
-        funny_img = transform_funny_image(img, animal)
-        img_str_data = transform_str(funny_img)
-        response = Response(content=img_str_data, media_type="image/png")
+        ear_attached_image = img_tool_box.attach_animal_ear(file_name, animal)
+        cv2_ear_attached_image = img_tool_box.pil_to_cv2(ear_attached_image)
+        anime_image = img_tool_box.anime_filter(cv2_ear_attached_image, 30)
+        str_anime_image = img_tool_box.cv2_to_str(anime_image)
+        response = Response(content=str_anime_image, media_type="image/png")
         return response
     except Exception as e:
         print(e)
