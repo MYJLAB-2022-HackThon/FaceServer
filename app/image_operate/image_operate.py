@@ -112,7 +112,7 @@ class image_operator:
             _ear_image,
             (
                 landmark[0][0],
-                2 * landmark[28][1] - landmark[8][1] - (int(y * scale) // _parameter),
+                2 * landmark[28][1] - (landmark[8][1] + (int(y * scale) // _parameter)),
             ),
         )
         attached_image = Image.alpha_composite(_character_image, _character_image_clear)
