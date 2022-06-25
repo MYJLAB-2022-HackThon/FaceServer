@@ -77,7 +77,7 @@ class image_operator:
             "RGBA"
         )
         if animal == "Rabbit" and animal == "Horse":
-            _parameter = 2
+            _parameter = 1
         elif animal == "Monkey":
             return _character_image
         elif animal == "Gorilla":
@@ -87,7 +87,7 @@ class image_operator:
             gorilla_image = gorilla_image.resize((_character_image.size))
             return gorilla_image
         else:
-            _parameter = 1
+            _parameter = 2
 
         gray_face_image = self.load_image_file(file_name)
 
