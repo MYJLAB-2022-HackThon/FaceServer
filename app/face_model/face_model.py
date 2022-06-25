@@ -7,7 +7,7 @@ class face_model:
     def __init__(self) -> None:
         _device = torch.device("cpu")
         _weight = torch.load("/app/face_model.pth")
-        self.load_model("", _weight, _device)
+        self.load_model(_weight, _device)
         self.preprocess = transforms.Compose(
             [
                 transforms.ToTensor(),
@@ -15,8 +15,9 @@ class face_model:
             ]
         )
 
-    def load_model(self, num_ftrs, weight, device):
+    def load_model(self, weight, device):
         self.model_face = models.resnet18(pretrained=True)
+        num_ftrs = self.model_face.fc.in_features
         self.model_face.fc = nn.Linear(num_ftrs, 8)
         self.model_face = self.model_face.to(device)
         self.model_face.load_state_dict(weight)
