@@ -67,9 +67,8 @@ class image_operator:
     # |------------------------------------------------------------------------------------
 
     def load_image_file(self, file_name):
-        gray_face_img = cv2.imread(
-            os.path.join(UP_LOAD_DIR + file_name), cv2.COLOR_BGR2GRAY
-        )
+        cv2_face_img = cv2.imread(UP_LOAD_DIR + file_name)
+        gray_face_img = cv2.cvtColor(cv2_face_img, cv2.COLOR_BGR2GRAY)
         return gray_face_img
 
     def attach_animal_ear(self, file_name, animal):
@@ -84,7 +83,7 @@ class image_operator:
             gorilla_image = Image.open(
                 "/app/image_operate/gorilla_img/gorilla.png"
             ).convert("RGBA")
-            gorilla_image = gorilla_image.resize((_character_image.size))
+            gorilla_image = gorilla_image.resize(_character_image.size)
             return gorilla_image
         else:
             _parameter = 2
@@ -93,9 +92,8 @@ class image_operator:
 
         faces = self.dlib_face_detector(gray_face_image, 1)
 
-        # 顔のランドマーク検出
         landmark = self.landmark_predictor(gray_face_image, faces[0])
-        # 処理高速化のためランドマーク群をNumPy配列に変換(必須)
+
         landmark = face_utils.shape_to_np(landmark)
 
         _ear_image = Image.open(f"/app/image_operate/ear_img/{animal}.png").convert(
