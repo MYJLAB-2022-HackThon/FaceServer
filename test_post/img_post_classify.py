@@ -8,7 +8,7 @@ response = session.post(url, files=files)
 recv_data = response.json()
 cookies_dict = response.cookies.get_dict()
 print(cookies_dict)
-print(response)
+print(recv_data)
 
 # url = "http://0.0.0.0:80/img/Dog"
 

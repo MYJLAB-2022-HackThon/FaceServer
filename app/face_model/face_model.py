@@ -25,8 +25,8 @@ class face_model:
     def input_image_to_model(self, image_file):
         preprocess_image = self.preprocess(image_file)
         preprocess_image_batch = preprocess_image[None]
-        self.face_model.eval()
-        predicted_animal_list = self.face_model(preprocess_image_batch)
+        self.model_face.eval()
+        predicted_animal_list = self.model_face(preprocess_image_batch)
         return predicted_animal_list
 
 
