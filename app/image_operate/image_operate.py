@@ -59,7 +59,7 @@ class image_operator:
         pil_image = Image.fromarray(cv2_image).convert("RGB")
         return pil_image
 
-    async def save_image_file(self, file_name, cv2_contents):
+    def save_image_file(self, file_name, cv2_contents):
         cv2.imwrite(os.path.join(UP_LOAD_DIR + file_name), cv2_contents)
 
     # |------------------------------------------------------------------------------------

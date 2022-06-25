@@ -62,7 +62,7 @@ async def return_classify_list(response: Response, file: UploadFile = File(...))
         pil_face_image = img_tool_box.pil_to_cv2(face_image)
 
         predicted_animal_list = model.input_image_to_model(pil_face_image)
-        predicted_animal_dict = animal_dict_gen(predicted_animal_list)
+        predicted_animal_dict = animal_dict_gen(predicted_animal_list.tolist()[0])
 
         json_body = {
             "message": "Completed save img",
@@ -76,8 +76,8 @@ async def return_classify_list(response: Response, file: UploadFile = File(...))
         print(e)
         return {"message": f"There was an error {e}"}
     finally:
-        await img_tool_box.save_image_file(file_name, cv2_image)
         await file.close()
+        img_tool_box.save_image_file(file_name, cv2_image)
 
 
 @app.get("/funny_img/{animal}/")
