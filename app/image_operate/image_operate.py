@@ -34,7 +34,7 @@ class image_operator:
     # |Functions used by classify API
     # |------------------------------------------------------------------------------------
 
-    def contents_to_cv2(contents) -> cv2:
+    def contents_to_cv2(self, contents) -> cv2:
         base_contents = base64.b64encode(contents)
         _bytes_image = base64.b64decode(base_contents)
         _np_image = np.frombuffer(_bytes_image, dtype=np.uint8)
@@ -55,7 +55,7 @@ class image_operator:
         face_image = self.face_recognizer.alignCrop(cv2_image, _face_images[0])
         return face_image
 
-    def cv2_to_pil(cv2_image):
+    def cv2_to_pil(self, cv2_image):
         pil_image = Image.fromarray(cv2_image).convert("RGB")
         return pil_image
 
@@ -66,7 +66,7 @@ class image_operator:
     # |Functions used by funny_img API
     # |------------------------------------------------------------------------------------
 
-    def load_image_file(file_name):
+    def load_image_file(self, file_name):
         gray_face_img = cv2.imread(
             os.path.join(UP_LOAD_DIR + file_name), cv2.COLOR_BGR2GRAY
         )
@@ -118,7 +118,7 @@ class image_operator:
         attached_image = Image.alpha_composite(_character_image, _character_image_clear)
         return attached_image
 
-    def pil_to_cv2(ear_attached_image):
+    def pil_to_cv2(self, ear_attached_image):
         np_ear_attached_image = np.array(ear_attached_image)
         cv2_ear_attached_image = cv2.cvtColor(np_ear_attached_image, cv2.COLOR_RGB2BGR)
         return cv2_ear_attached_image
