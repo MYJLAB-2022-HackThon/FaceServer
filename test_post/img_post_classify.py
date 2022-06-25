@@ -12,9 +12,9 @@ cookies_dict = response.cookies.get_dict()
 print(cookies_dict)
 print(recv_data)
 
-url = "http://133.2.101.153:55580/funny_img/Dog"
+url = "http://133.2.101.153:55580/funny_img/Rabbit"
 
 response = session.get(url, cookies=cookies_dict)
 recv_data = response.content
 i = Image.open(BytesIO(recv_data))
-i.save("test.png")
+i.save("test2.png")

@@ -75,9 +75,7 @@ class image_operator:
         _character_image = Image.open(os.path.join(UP_LOAD_DIR + file_name)).convert(
             "RGBA"
         )
-        if animal == "Rabbit" and animal == "Horse":
-            _parameter = 1
-        elif animal == "Monkey":
+        if animal == "Monkey":
             return _character_image
         elif animal == "Gorilla":
             gorilla_image = Image.open(
@@ -85,8 +83,6 @@ class image_operator:
             ).convert("RGBA")
             gorilla_image = gorilla_image.resize(_character_image.size)
             return gorilla_image
-        else:
-            _parameter = 2
 
         gray_face_image = self.load_image_file(file_name)
 
@@ -110,7 +106,7 @@ class image_operator:
             _ear_image,
             (
                 landmark[0][0],
-                2 * landmark[28][1] - (landmark[8][1] + (int(y * scale) // _parameter)),
+                2 * landmark[28][1] - (landmark[8][1] + (int(y * scale) // 2)),
             ),
         )
         attached_image = Image.alpha_composite(_character_image, _character_image_clear)

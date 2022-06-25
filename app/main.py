@@ -34,17 +34,17 @@ def time_gen():
 def animal_dict_gen(animal_list):
     iteral = 0
     animal_dict = {
-        "Dog": 0,
-        "Cat": 0,
-        "Wolf": 0,
-        "Gorilla": 0,
         "Fox": 0,
         "Rabbit": 0,
-        "Monkey": 0,
+        "Wolf": 0,
+        "Cat": 0,
+        "Dog": 0,
+        "Gorilla": 0,
         "Horse": 0,
+        "Monkey": 0,
     }
     for key in animal_dict:
-        animal_dict[key] += animal_list[iteral]
+        animal_dict[key] += animal_list[iteral] / sum(animal_list)
         iteral += 1
     return animal_dict
 
