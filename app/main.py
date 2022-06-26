@@ -44,7 +44,9 @@ def animal_dict_gen(animal_list):
         "Monkey": 0,
     }
     for key in animal_dict:
-        animal_dict[key] += animal_list[iteral] / sum(animal_list)
+        animal_dict[key] += (animal_list[iteral] - min(animal_list)) / (
+            max(animal_list) - min(animal_list)
+        )
         iteral += 1
     return animal_dict
 
