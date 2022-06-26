@@ -32,7 +32,11 @@ def time_gen():
 
 
 def animal_dict_gen(animal_list):
-    iteral = 0
+    for index in range(animal_list):
+        animal_list[index] = (animal_list[index] - min(animal_list)) / (
+            max(animal_list) - min(animal_list)
+        )
+
     animal_dict = {
         "Fox": 0,
         "Rabbit": 0,
@@ -43,10 +47,9 @@ def animal_dict_gen(animal_list):
         "Horse": 0,
         "Monkey": 0,
     }
+    iteral = 0
     for key in animal_dict:
-        animal_dict[key] += (animal_list[iteral] - min(animal_list)) / (
-            max(animal_list) - min(animal_list)
-        )
+        animal_dict[key] += animal_list[iteral] / sum(animal_list)
         iteral += 1
     return animal_dict
 
